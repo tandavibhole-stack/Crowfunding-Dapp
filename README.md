@@ -237,7 +237,7 @@ stellar contract invoke --id CAQT6F4YZ4O3CYDOEF5UNTIVXJ4Q45TUUZXFLQ7OUN2WRBIKKEL
 
 ## 🔗 Live Demo & Transaction Proof
 
-*   **Live Demo Link**: `<ADD_AFTER_DEPLOY>` (Update once deployed to Vercel/Netlify)
+*   **Live Demo Link**: [https://crowfunding-dapp-zeta.vercel.app/](https://crowfunding-dapp-zeta.vercel.app/)
 *   **Explorer Links**:
     *   [Factory Contract Explorer](https://stellar.expert/explorer/testnet/contract/CAQT6F4YZ4O3CYDOEF5UNTIVXJ4Q45TUUZXFLQ7OUN2WRBIKKELUNY73)
     *   [Initial Campaign Explorer](https://stellar.expert/explorer/testnet/contract/CDWEBAJZKCKB7DYXZYUWMCSW3K2VPKJUGQOYM4FAQAQKYIAPN5JRUGIR)
@@ -322,7 +322,7 @@ Our `.github/workflows/ci.yml` pipeline automatically verifies the integrity of 
 
 ## 📹 Demo Video
 
-🎥 **[Watch Demo Video](<ADD_YOUTUBE_OR_LOOM_LINK>)**
+🎥 **[Watch Demo Video](https://photos.app.goo.gl/jjSBubUgMHqUGzAE8)**
 
 ### Outline of the Demo Presentation
 1.  **Elevator Pitch (15s)**: Introduce StellarFund and highlight the benefits of Soroban-managed escrows.
