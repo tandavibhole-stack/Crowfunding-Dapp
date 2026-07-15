@@ -102,6 +102,13 @@ export default function App() {
     }
   };
 
+  // Disconnect Wallet Action
+  const handleDisconnectWallet = () => {
+    setWalletConnected(false);
+    setUserAddress(null);
+    setSuccessMsg('Wallet disconnected successfully.');
+  };
+
   // 2. Fetch all campaigns
   const loadCampaigns = useCallback(async () => {
     setLoading(true);
@@ -380,9 +387,17 @@ export default function App() {
 
         <div className="flex items-center space-x-3">
           {walletConnected && userAddress ? (
-            <div className="flex items-center space-x-2 bg-slate-900/80 border border-slate-800 rounded-full px-4 py-2 text-xs md:text-sm font-medium">
-              <span className="h-2 w-2 bg-emerald-400 rounded-full animate-pulse"></span>
-              <span className="text-slate-300 font-mono">{truncateAddress(userAddress)}</span>
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2 bg-slate-900/80 border border-slate-800 rounded-full px-4 py-2 text-xs md:text-sm font-medium">
+                <span className="h-2 w-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                <span className="text-slate-300 font-mono">{truncateAddress(userAddress)}</span>
+              </div>
+              <button
+                onClick={handleDisconnectWallet}
+                className="bg-slate-900/80 border border-slate-800 hover:border-red-500/50 hover:text-red-400 text-slate-400 px-3.5 py-2 rounded-full text-xs font-semibold transition-all duration-300 active:scale-95 flex items-center space-x-1"
+              >
+                <span>Disconnect</span>
+              </button>
             </div>
           ) : (
             <button
