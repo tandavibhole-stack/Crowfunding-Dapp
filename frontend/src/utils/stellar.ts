@@ -10,7 +10,7 @@ import {
 } from '@stellar/stellar-sdk';
 import {
   isConnected as freighterIsConnected,
-  getAddress,
+  requestAccess,
   signTransaction as freighterSignTransaction,
 } from '@stellar/freighter-api';
 
@@ -31,14 +31,14 @@ export async function isConnected(): Promise<boolean> {
 // Wrapper for retrieving the connected public key (returns string directly)
 export async function getPublicKey(): Promise<string | null> {
   try {
-    const res = await getAddress();
+    const res = await requestAccess();
     if (res.error) {
-      console.warn('Freighter getAddress error:', res.error);
+      console.warn('Freighter requestAccess error:', res.error);
       return null;
     }
     return res.address;
   } catch (err) {
-    console.error('Freighter getAddress failed:', err);
+    console.error('Freighter requestAccess failed:', err);
     return null;
   }
 }
