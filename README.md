@@ -307,16 +307,16 @@ Our `.github/workflows/ci.yml` pipeline automatically verifies the integrity of 
 ## 📸 Screenshots
 
 ### 1. Responsive Mobile Interface (375px)
-![Mobile UI](./screenshots/mobile.png)
+![Mobile UI](image.png)
 
 ### 2. Desktop/Tablet Interface
-![Tablet UI](./screenshots/tablet.png)
+![Tablet UI](image-1.png)
 
 ### 3. Smart Contract & Frontend Passing Tests
-![Test Output](./screenshots/test_output.png)
+![Test Output](image-2.png)
 
 ### 4. GitHub Actions CI/CD Pipeline Status
-![CI/CD Pipeline](./screenshots/pipeline.png)
+![CI/CD Pipeline](image-3.png)
 
 ---
 
