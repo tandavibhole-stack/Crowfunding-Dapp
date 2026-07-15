@@ -25,9 +25,6 @@ jobs:
             ~/.cargo/bin
             target
           key: ${{ runner.os }}-cargo-deploy-${{ hashFiles('**/Cargo.lock') }}
-      - name: Pin conflicting dependencies
-        run: |
-          cargo update -p ed25519-dalek@3.0.0 --precise 2.2.0
       # Installs cargo-binstall instantly
       - name: Install cargo-binstall
         run: |
