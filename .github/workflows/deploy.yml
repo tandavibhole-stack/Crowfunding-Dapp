@@ -7,6 +7,9 @@ jobs:
   deploy:
     name: Deploy to Testnet
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./
     steps:
       - uses: actions/checkout@v4
       - name: Install Rust toolchain
@@ -20,32 +23,42 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             ~/.cargo/bin
-            target/
+            target
           key: ${{ runner.os }}-cargo-deploy-${{ hashFiles('**/Cargo.lock') }}
       - name: Pin conflicting dependencies
         run: |
           cargo update -p ed25519-dalek@3.0.0 --precise 2.2.0
+      # Installs cargo-binstall instantly
       - name: Install cargo-binstall
         run: |
-          curl -L --proto '=https' --sv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+          curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+      # Installs stellar-cli in 3 seconds using the precompiled binary
       - name: Install Stellar CLI
         run: cargo binstall --no-confirm stellar-cli
+      # Build standard wasm and optimize it
       - name: Build contracts
         run: |
           cargo build --target wasm32-unknown-unknown --release
           stellar contract optimize --wasm target/wasm32-unknown-unknown/release/stellarfund_campaign.wasm
           stellar contract optimize --wasm target/wasm32-unknown-unknown/release/stellarfund_factory.wasm
+      # Deploy the optimized contracts
       - name: Deploy to Testnet
         run: |
           echo "Generating identities..."
           stellar keys generate deployer --network testnet
           stellar keys fund deployer --network testnet
-          echo "Deploying Campaign WASM..."
-          stellar contract install --wasm target/wasm32-unknown-unknown/release/stellarfund_campaign.optimized.wasm --source deployer --network testnet
+          
+          echo "Installing Campaign Contract WASM..."
+          CAMPAIGN_WASM_HASH=$(stellar contract install \
+            --wasm target/wasm32-unknown-unknown/release/stellarfund_campaign.optimized.wasm \
+            --source deployer \
+            --network testnet 2>deploy_err.log) || { cat deploy_err.log; exit 1; }
+          echo "Campaign WASM Hash: $CAMPAIGN_WASM_HASH"
+          
           echo "Deploying Factory Contract..."
-          CONTRACT_ID=$(stellar contract deploy \
+          FACTORY_ID=$(stellar contract deploy \
             --wasm target/wasm32-unknown-unknown/release/stellarfund_factory.optimized.wasm \
             --source deployer \
             --network testnet 2>deploy_err.log) || { cat deploy_err.log; exit 1; }
-          echo "Factory deployed at: $CONTRACT_ID"
+          echo "Factory Contract ID: $FACTORY_ID"
