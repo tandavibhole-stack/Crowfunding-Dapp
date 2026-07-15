@@ -1,0 +1,51 @@
+name: Deploy Contracts to Testnet
+on:
+  workflow_dispatch:
+env:
+  CARGO_TERM_COLOR: always
+jobs:
+  deploy:
+    name: Deploy to Testnet
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - name: Cache cargo registry and binaries
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cargo/bin
+            target/
+          key: ${{ runner.os }}-cargo-deploy-${{ hashFiles('**/Cargo.lock') }}
+      - name: Pin conflicting dependencies
+        run: |
+          cargo update -p ed25519-dalek@3.0.0 --precise 2.2.0
+      - name: Install cargo-binstall
+        run: |
+          curl -L --proto '=https' --sv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+      - name: Install Stellar CLI
+        run: cargo binstall --no-confirm stellar-cli
+      - name: Build contracts
+        run: |
+          cargo build --target wasm32-unknown-unknown --release
+          stellar contract optimize --wasm target/wasm32-unknown-unknown/release/stellarfund_campaign.wasm
+          stellar contract optimize --wasm target/wasm32-unknown-unknown/release/stellarfund_factory.wasm
+      - name: Deploy to Testnet
+        run: |
+          echo "Generating identities..."
+          stellar keys generate deployer --network testnet
+          stellar keys fund deployer --network testnet
+          echo "Deploying Campaign WASM..."
+          stellar contract install --wasm target/wasm32-unknown-unknown/release/stellarfund_campaign.optimized.wasm --source deployer --network testnet
+          echo "Deploying Factory Contract..."
+          CONTRACT_ID=$(stellar contract deploy \
+            --wasm target/wasm32-unknown-unknown/release/stellarfund_factory.optimized.wasm \
+            --source deployer \
+            --network testnet 2>deploy_err.log) || { cat deploy_err.log; exit 1; }
+          echo "Factory deployed at: $CONTRACT_ID"
