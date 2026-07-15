@@ -33,7 +33,7 @@ const FACTORY_ID = deployedAddresses.factoryContractId;
 export default function App() {
   const [walletConnected, setWalletConnected] = useState<boolean>(false);
   const [userAddress, setUserAddress] = useState<string | null>(null);
-  const [campaignAddresses, setCampaignAddresses] = useState<string[]>([]);
+
   const [campaigns, setCampaigns] = useState<CampaignDetails[]>([]);
   const [selectedCampaign, setSelectedCampaign] = useState<CampaignDetails | null>(null);
   
@@ -108,7 +108,7 @@ export default function App() {
     setErrorMsg(null);
     try {
       const addresses = await getCampaignsRegistry(FACTORY_ID);
-      setCampaignAddresses(addresses);
+
       
       const detailsList = await Promise.all(
         addresses.map((addr) => getCampaignDetails(addr, userAddress || undefined))

@@ -9,16 +9,39 @@ import {
   scValToNative,
 } from '@stellar/stellar-sdk';
 import {
-  isConnected,
-  getPublicKey,
-  signTransaction,
+  isConnected as freighterIsConnected,
+  getAddress,
+  signTransaction as freighterSignTransaction,
 } from '@stellar/freighter-api';
 
 const RPC_URL = 'https://soroban-testnet.stellar.org';
 const server = new rpc.Server(RPC_URL);
 const dummyAccount = new Account('GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF', '0');
 
-export { isConnected, getPublicKey };
+// Wrapper for checking if Freighter is connected (returns boolean directly)
+export async function isConnected(): Promise<boolean> {
+  try {
+    const res = await freighterIsConnected();
+    return !!res.isConnected;
+  } catch {
+    return false;
+  }
+}
+
+// Wrapper for retrieving the connected public key (returns string directly)
+export async function getPublicKey(): Promise<string | null> {
+  try {
+    const res = await getAddress();
+    if (res.error) {
+      console.warn('Freighter getAddress error:', res.error);
+      return null;
+    }
+    return res.address;
+  } catch (err) {
+    console.error('Freighter getAddress failed:', err);
+    return null;
+  }
+}
 
 // Helper to poll transaction status
 async function pollTransactionStatus(txHash: string): Promise<rpc.Api.GetTransactionResponse> {
@@ -48,7 +71,7 @@ async function callReadOnly(contractId: string, functionName: string, args: any[
     .build();
 
   const simRes = await server.simulateTransaction(tx);
-  if (rpc.Api.isSimulationSuccess(simRes)) {
+  if (rpc.Api.isSimulationSuccess(simRes) && simRes.result) {
     const resultVal = simRes.result.retval;
     return scValToNative(resultVal);
   } else {
@@ -84,20 +107,25 @@ async function executeTransaction(
   tx = await server.prepareTransaction(tx);
 
   // Sign transaction with Freighter wallet
-  const signedXdr = await signTransaction(tx.toXDR(), {
-    network: 'TESTNET',
+  const signedRes = await freighterSignTransaction(tx.toXDR(), {
+    networkPassphrase: Networks.TESTNET,
+    address: userPublicKey,
   });
 
-  const signedTx = TransactionBuilder.fromXDR(signedXdr, Networks.TESTNET);
+  if (signedRes.error) {
+    throw new Error(`Freighter signing error: ${signedRes.error}`);
+  }
+
+  const signedTx = TransactionBuilder.fromXDR(signedRes.signedTxXdr, Networks.TESTNET);
   const sendRes = await server.sendTransaction(signedTx);
 
   if (sendRes.status === 'PENDING') {
-    const pollRes = await pollTransactionStatus(sendRes.hash);
+    const pollRes = (await pollTransactionStatus(sendRes.hash)) as any;
     let result = null;
     if (pollRes.returnValue) {
       result = scValToNative(pollRes.returnValue);
     }
-    return { hash: pollRes.hash, result };
+    return { hash: pollRes.txHash || sendRes.hash, result };
   } else {
     throw new Error(`Transaction submission error: ${JSON.stringify(sendRes)}`);
   }
