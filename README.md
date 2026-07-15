@@ -222,16 +222,16 @@ stellar contract install --wasm target/wasm32-unknown-unknown/release/stellarfun
 stellar contract deploy --wasm target/wasm32-unknown-unknown/release/stellarfund_factory.optimized.wasm --source deployer --network testnet
 
 # 3. Initialize the Factory Contract
-stellar contract invoke --id CD77ZSO7TUXDZEMC7453VSOTFPRGYGZKX6U5CXS44CDWPH6GZKQYF4D2 --source deployer --network testnet -- init --campaign_wasm_hash ff1877d63ef6aa06d5f7bba07ce3d5d12be3234360ff582d7c401e61a42199ad --token_address CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC
+stellar contract invoke --id CAQT6F4YZ4O3CYDOEF5UNTIVXJ4Q45TUUZXFLQ7OUN2WRBIKKELUNY73 --source deployer --network testnet -- init --campaign_wasm_hash ff1877d63ef6aa06d5f7bba07ce3d5d12be3234360ff582d7c401e61a42199ad --token_address CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC
 ```
 
 ### Deployed Contract Registry Table
 | Contract | Address / Hash | Network |
 | :--- | :--- | :--- |
-| **Factory Contract ID** | `CD77ZSO7TUXDZEMC7453VSOTFPRGYGZKX6U5CXS44CDWPH6GZKQYF4D2` | Stellar Testnet |
+| **Factory Contract ID** | `CAQT6F4YZ4O3CYDOEF5UNTIVXJ4Q45TUUZXFLQ7OUN2WRBIKKELUNY73` | Stellar Testnet |
 | **Campaign WASM Hash** | `ff1877d63ef6aa06d5f7bba07ce3d5d12be3234360ff582d7c401e61a42199ad` | Stellar Testnet |
 | **Stellar Native Token (SAC)** | `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC` | Stellar Testnet |
-| **Initial Test Campaign** | `CANJBNLY4BAJ5CMBQ6N7YVDJQBPTNLRA2JD574KEFEQ64EJI3VEECQAF` | Stellar Testnet |
+| **Initial Test Campaign** | `CDWEBAJZKCKB7DYXZYUWMCSW3K2VPKJUGQOYM4FAQAQKYIAPN5JRUGIR` | Stellar Testnet |
 
 ---
 
@@ -239,13 +239,13 @@ stellar contract invoke --id CD77ZSO7TUXDZEMC7453VSOTFPRGYGZKX6U5CXS44CDWPH6GZKQ
 
 *   **Live Demo Link**: `<ADD_AFTER_DEPLOY>` (Update once deployed to Vercel/Netlify)
 *   **Explorer Links**:
-    *   [Factory Contract Explorer](https://stellar.expert/explorer/testnet/contract/CD77ZSO7TUXDZEMC7453VSOTFPRGYGZKX6U5CXS44CDWPH6GZKQYF4D2)
-    *   [Initial Campaign Explorer](https://stellar.expert/explorer/testnet/contract/CANJBNLY4BAJ5CMBQ6N7YVDJQBPTNLRA2JD574KEFEQ64EJI3VEECQAF)
+    *   [Factory Contract Explorer](https://stellar.expert/explorer/testnet/contract/CAQT6F4YZ4O3CYDOEF5UNTIVXJ4Q45TUUZXFLQ7OUN2WRBIKKELUNY73)
+    *   [Initial Campaign Explorer](https://stellar.expert/explorer/testnet/contract/CDWEBAJZKCKB7DYXZYUWMCSW3K2VPKJUGQOYM4FAQAQKYIAPN5JRUGIR)
 
 ### On-Chain Transaction Proof
-*   **Real Pledge Transaction Hash**: `515d30c347c1663212e14e8a667972b6c61b787a6f434b140c364b340f6bfa40`
-*   **StellarExpert Explorer Link**: [Verify Pledge Tx](https://stellar.expert/explorer/testnet/tx/515d30c347c1663212e14e8a667972b6c61b787a6f434b140c364b340f6bfa40)
-*   **Transaction Details**: This transaction represents a real pledge of `10 XLM` (`100,000,000` stroops) sent from the creator's wallet (`GCYMLC...RHF5`) to the campaign contract escrow address (`CANJBN...CQAF`), which successfully performed the cross-contract transfer via the native Stellar Asset Contract.
+*   **Real Pledge Transaction Hash**: `77dbd578fd1afb72cbc8107f6b362afb2bdde292d900db6b3f07ecc46607bf6b`
+*   **StellarExpert Explorer Link**: [Verify Pledge Tx](https://stellar.expert/explorer/testnet/tx/77dbd578fd1afb72cbc8107f6b362afb2bdde292d900db6b3f07ecc46607bf6b)
+*   **Transaction Details**: This transaction represents a real pledge of `10 XLM` (`100,000,000` stroops) sent from the creator's wallet (`GCYMLC...RHF5`) to the campaign contract escrow address (`CDWEBA...GIR`), which successfully performed the cross-contract transfer via the native Stellar Asset Contract.
 
 ---
 

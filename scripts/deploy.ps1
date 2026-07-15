@@ -36,7 +36,7 @@ Write-Host "=========================================="
 Write-Host "4. Creating a Test Campaign..."
 Write-Host "=========================================="
 $deadline = [DateTimeOffset]::Now.AddDays(7).ToUnixTimeSeconds()
-$goal = "1000000000" # 100 XLM
+$goal = "10000000000" # 1000 XLM
 $title = "Save the Oceans"
 $description = "Crowdfunding for cleaning marine plastic on Stellar Testnet"
 
